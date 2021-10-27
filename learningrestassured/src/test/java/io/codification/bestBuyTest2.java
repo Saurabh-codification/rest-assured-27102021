@@ -80,6 +80,7 @@ public class bestBuyTest2 {
 
         given()
         .pathParam("id", 43900)
+        .when()
         .get("/{id}")
         .then().log().all()
         .statusCode(200)
@@ -101,6 +102,24 @@ public class bestBuyTest2 {
     public void addProductWhenRequestPayloadIsInJsonFile(){
 
         File requestPayload = new File(currentWorkingDirectory + "/testData/product.json");
+
+        given().contentType(ContentType.JSON).body(requestPayload)
+        .when().post().then().log().all().statusCode(201);
+    }
+
+    @Test
+    public void addProductWhenRequestPayloadAsMap(){
+
+        Map<String, Object> requestPayload = new HashMap<>();
+
+        requestPayload.put("name", "Samsung Mobile");
+		requestPayload.put("type", "Mobile");
+		requestPayload.put("upc", "04133824019");
+		requestPayload.put("price", 500);
+		requestPayload.put("shipping", 40);
+		requestPayload.put("description", "Samsung best Mobile");
+		requestPayload.put("manufacturer", "Samsung");
+		requestPayload.put("model", "M21");
 
         given().contentType(ContentType.JSON).body(requestPayload)
         .when().post().then().log().all().statusCode(201);

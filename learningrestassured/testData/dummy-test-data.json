@@ -1,0 +1,13 @@
+{
+
+    "name" : "saurabh",
+    "email" : "saurabh.dhingra@codification.io",
+    "phoneNumber" : [743658734, 374563487, 48356934],
+
+    "address" : {
+        "type" : "home",
+        "pincode" : "122001"
+    }
+
+}
+
