@@ -1,9 +1,9 @@
 package io.codification;
 
 import static org.hamcrest.Matchers.*;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static bestBuyAppRoutes.Routes.*;
 import io.codification.bestBuyApp.ProductPojo;
 import static specs.Specifications.*;
 
@@ -15,31 +15,25 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class bestBuyTest2 {
+import com.aventstack.extentreports.Status;
 
-    String currentWorkingDirectory;
-
-    String productEndpointUrl = "/products";
-
-    @BeforeClass
-    public void Setup() {
-
-        baseURI = "http://localhost";
-
-        port = 3030;
-
-        currentWorkingDirectory = System.getProperty("user.dir");
-    }
+public class bestBuyTest2 extends BaseTest {
 
     @Test
     public void getProductApi() {
 
-        SendGetRequest(productEndpointUrl).then().spec(getSuccessResponseSpecification());
+        reportUtils.createTestCase("Get Product API");
+
+        SendGetRequest(PRODUCTS).then().spec(getSuccessResponseSpecification());
+
+        reportUtils.addLog(Status.INFO, "Verify Get Product API");
 
     }
 
     @Test
     public void getProductApiWithQueryParameters() {
+
+        reportUtils.createTestCase("Get Product API with Query Parameters");
 
         given().queryParam("$limit", 2).queryParam("$skip", 1).get().then().log().all().statusCode(200)
                 .statusLine("HTTP/1.1 200 OK");
@@ -55,7 +49,7 @@ public class bestBuyTest2 {
         params.put("$limit", 2);
         params.put("$skip", 1);
 
-        SendGetRequest(productEndpointUrl, params).then().log().all().body("limit", equalTo(2)).body("skip", equalTo(1))
+        SendGetRequest(PRODUCTS, params).then().log().all().body("limit", equalTo(2)).body("skip", equalTo(1))
                 .statusCode(200).statusLine("HTTP/1.1 200 OK");
 
     }
@@ -73,7 +67,7 @@ public class bestBuyTest2 {
 
         String requestPayload = "{\r\n  \"name\": \"Samsung Mobile\",\r\n  \"type\": \"Mobile\",\r\n  \"price\": 1000,\r\n  \"shipping\": 30,\r\n  \"upc\": \"string\",\r\n  \"description\": \"Best Mobile in the town\",\r\n  \"manufacturer\": \"Samsung\",\r\n  \"model\": \"string\",\r\n  \"url\": \"string\",\r\n  \"image\": \"string\"\r\n}";
 
-        SendPostRequest(productEndpointUrl, requestPayload).then().spec(postSuccessResponseSpecification());
+        SendPostRequest(PRODUCTS, requestPayload).then().spec(postSuccessResponseSpecification());
     }
 
     @Test
@@ -81,7 +75,7 @@ public class bestBuyTest2 {
 
         File requestPayload = new File(currentWorkingDirectory + "/testData/product.json");
 
-        SendPostRequest(productEndpointUrl, requestPayload).then().spec(postSuccessResponseSpecification());
+        SendPostRequest(PRODUCTS, requestPayload).then().spec(postSuccessResponseSpecification());
     }
 
     @Test
@@ -98,7 +92,7 @@ public class bestBuyTest2 {
         requestPayload.put("manufacturer", "Samsung");
         requestPayload.put("model", "M21");
 
-        SendPostRequest(productEndpointUrl, requestPayload).then().spec(postSuccessResponseSpecification());
+        SendPostRequest(PRODUCTS, requestPayload).then().spec(postSuccessResponseSpecification());
     }
 
     @Test
@@ -117,7 +111,7 @@ public class bestBuyTest2 {
         requestPayload.setUrl("kjsdfkjsdhlf");
         requestPayload.setImage("hdskjfhkj");
 
-        SendPostRequest(productEndpointUrl, requestPayload).then().spec(postSuccessResponseSpecification());
+        SendPostRequest(PRODUCTS, requestPayload).then().spec(postSuccessResponseSpecification());
     }
 
     @Test
@@ -136,7 +130,7 @@ public class bestBuyTest2 {
         requestPayload.setUrl("kjsdfkjsdhlf");
         requestPayload.setImage("hdskjfhkj");
 
-        Integer id = SendPostRequest(productEndpointUrl, requestPayload).then().extract().path("id");
+        Integer id = SendPostRequest(PRODUCTS, requestPayload).then().extract().path("id");
 
 
         ProductPojo requestPayloadForUpdate = new ProductPojo();
@@ -152,7 +146,7 @@ public class bestBuyTest2 {
         requestPayloadForUpdate.setUrl("kjsdfkjsdhlf");
         requestPayloadForUpdate.setImage("hdskjfhkj");
 
-        String endpointUrl = String.format("%s/%d", productEndpointUrl, id);
+        String endpointUrl = String.format("%s/%d", PRODUCTS, id);
 
         System.out.println(endpointUrl);
 
